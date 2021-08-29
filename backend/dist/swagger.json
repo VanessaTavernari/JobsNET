@@ -1,0 +1,259 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Página destinada ao formulário de cadastro",
+    "version": "1.0.0",
+    "title": "Formulário de cadastro",
+    "termsOfService": "http://swagger.io/terms/"
+  },
+  "host": "vanessa-jobsnet-backend.netlify.app",
+  "basePath": "/.netlify/functions/api",
+  "tags": [
+    {
+      "name": "candidato",
+      "description": "Informações sobre o candidato"
+    },
+    {
+      "name": "endereco",
+      "description": "Ajuda na busca pelo endereço"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/candidato": {
+      "post": {
+        "tags": [
+          "candidato"
+        ],
+        "summary": "Adiciona um candidato ao JobsNet backend",
+        "description": "Adicionar um candidato e só pode existir um cadidato por CPF",
+        "operationId": "addCandidato",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Candidato model",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Candidato"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Significa que o cadastro foi executado com sucesso"
+          },
+          "400": {
+            "description": "Erro ao cadastrar, cheque se o CPF não está repetido"
+          }
+        }
+      }
+    },
+    "/candidato/{cpf}": {
+      "get": {
+        "tags": [
+          "candidato"
+        ],
+        "summary": "Buscar o candidato pelo CPF",
+        "description": "",
+        "operationId": "getCPF",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cpf",
+            "description": "CPF de um candidato cadastrado",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna candidato",
+            "schema": {
+              "$ref": "#/definitions/Candidato"
+            }
+          },
+          "400": {
+            "description": "Candidato não encontrando pelo CPF retorna vazio"
+          }
+        }
+      }
+    },
+    "/endereco/{cep}": {
+      "get": {
+        "tags": [
+          "endereco"
+        ],
+        "summary": "Retorna um endereço pelo CEP",
+        "description": "Ao passar um CEP válido, retornará um endereço, caso inválido retornará vazio",
+        "operationId": "getEnderecoByCEP",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "cep",
+            "description": "CEP de um endereço válido",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna candidato",
+            "schema": {
+              "$ref": "#/definitions/EnderecoCEP"
+            }
+          },
+          "400": {
+            "description": "Retorna um texto quando não encontra o CEP"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Candidato": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "nome": {
+          "type": "string"
+        },
+        "profissao": {
+          "type": "string"
+        },
+        "formacaoAcademica": {
+          "type": "string"
+        },
+        "identidade": {
+          "type": "string"
+        },
+        "cargoPretendido": {
+          "type": "string"
+        },
+        "cpf": {
+          "type": "string"
+        },
+        "estadoCivil": {
+          "type": "string"
+        },
+        "sexo": {
+          "type": "string"
+        },
+        "telefone": {
+          "type": "string"
+        },
+        "celular": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "habilitacao": {
+          "type": "string",
+          "enum": [
+            "sim",
+            "não"
+          ]
+        },
+        "veiculo": {
+          "type": "string",
+          "enum": [
+            "sim",
+            "não"
+          ]
+        },
+        "confirmacao": {
+          "type": "boolean"
+        },
+        "dataDeNascimento": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endereco": {
+          "$ref": "#/definitions/Endereco"
+        }
+      }
+    },
+    "Endereco": {
+      "type": "object",
+      "properties": {
+        "cidade": {
+          "type": "string"
+        },
+        "logradouro": {
+          "type": "string"
+        },
+        "estado": {
+          "type": "string"
+        },
+        "bairro": {
+          "type": "string"
+        },
+        "numero": {
+          "type": "string"
+        },
+        "cep": {
+          "type": "string"
+        }
+      }
+    },
+    "EnderecoCEP": {
+      "type": "object",
+      "properties": {
+        "localidae": {
+          "type": "string"
+        },
+        "logradouro": {
+          "type": "string"
+        },
+        "uf": {
+          "type": "string"
+        },
+        "bairro": {
+          "type": "string"
+        },
+        "cep": {
+          "type": "string"
+        },
+        "complemento": {
+          "type": "string"
+        },
+        "ibge": {
+          "type": "string"
+        },
+        "gia": {
+          "type": "string"
+        },
+        "ddd": {
+          "type": "string"
+        },
+        "siafi": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Order"
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}
