@@ -1,8 +1,11 @@
+'use strict';
 const express = require('express')
-var cors = require('cors')
+const cors = require('cors')
 const { MongoClient } = require('mongodb');
+const serverless = require('serverless-http');
 
 const app = express()
+const router = express.Router()
 app.use(express.json())
 app.use(cors())
 
@@ -33,7 +36,7 @@ function validateFields(body, res) {
         && checkAndResponseByField(body.confirmacao, res, "Deve confirmar as informações antes de finalizar")
 }
   
-app.post('/candidato', function (req, res) {
+router.post('/candidato', function (req, res) {
     console.log(req.body)
     let user = req.body
     
@@ -53,7 +56,7 @@ app.post('/candidato', function (req, res) {
     });
 })
 
-app.get('/candidato/:cpf', function (req, res) {
+router.get('/candidato/:cpf', function (req, res) {
     
     client.connect(err => {
 
@@ -75,5 +78,11 @@ app.get('/candidato/:cpf', function (req, res) {
 
     });
 })
- 
-app.listen(3000)
+
+router.get("/", (req, res) => { 
+    res.json({ "hello": "hi"})
+})
+
+app.use('/.netlify/functions/api', router);
+
+module.exports.handler = serverless(app);
