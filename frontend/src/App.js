@@ -4,7 +4,7 @@ import React,{ Component } from "react";
 import axios from "axios";
 
 const candidatoAPI = axios.create({
-  baseURL: "http://127.0.0.1:3000"
+  baseURL: "https://vanessa-jobsnet-backend.netlify.app/.netlify/functions/api"
 });
 
 class App extends Component{
