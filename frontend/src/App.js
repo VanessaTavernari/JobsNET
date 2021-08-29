@@ -158,6 +158,7 @@ class App extends Component{
   render(){
     return(
       <>
+        <h1>Formulário de inscrição</h1>
         <form onSubmit={this.handleSubmit}>
         <div className="container">
             <label className="required">Profissão</label><br/>
