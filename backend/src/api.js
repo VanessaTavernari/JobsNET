@@ -82,7 +82,7 @@ router.get('/candidato/:cpf', function (req, res) {
     });
 })
 
-router.get('/cep/:cep', function (req, res) { 
+router.get('/endereco/:cep', function (req, res) { 
 
     axios.get('https://viacep.com.br/ws/'+req.params.cep+'/json/')
     .then(response => {

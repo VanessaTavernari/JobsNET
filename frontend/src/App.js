@@ -110,7 +110,7 @@ class App extends Component{
         endereco.cep = event.target.value
         this.setState({endereco: endereco})
 
-        candidatoAPI.get("/cep/"+event.target.value)
+        candidatoAPI.get("/endereco/"+event.target.value)
         .then(response => {
           let { localidade, logradouro, cep, bairro, uf} = response.data
 
