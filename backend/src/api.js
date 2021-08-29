@@ -1,5 +1,6 @@
 'use strict';
 const express = require('express')
+const axios = require('axios')
 const cors = require('cors')
 const { MongoClient } = require('mongodb');
 const serverless = require('serverless-http');
@@ -28,9 +29,11 @@ function validateFields(body, res) {
         && checkAndResponseByField(body.nome, res, "Nome não pode estar vazio")
         && checkAndResponseByField(body.profissao, res, "Profissao não pode estar vazio")
         && checkAndResponseByField(body.dataDeNascimento, res, "Data de nascimento não pode estar vazio")
-        && checkAndResponseByField(body.endereco, res, "Endereço não pode estar vazio")
-        && checkAndResponseByField(body.cidade, res, "Cidade não pode estar vazio")
-        && checkAndResponseByField(body.cep, res, "CEP não pode estar vazio")
+        && checkAndResponseByField(body.endereco.logradouro, res, "Logradouro não pode estar vazio")
+        && checkAndResponseByField(body.endereco.cidade, res, "Cidade não pode estar vazio")
+        && checkAndResponseByField(body.endereco.cep, res, "CEP não pode estar vazio")
+        && checkAndResponseByField(body.endereco.numero, res, "Número não pode estar vazio")
+        && checkAndResponseByField(body.endereco.bairro, res, "Bairro não pode estar vazio")
         && checkAndResponseByField(body.celular, res, "Celular não pode estar vazio")
         && checkAndResponseByField(body.email, res, "Email não pode estar vazio")
         && checkAndResponseByField(body.confirmacao, res, "Deve confirmar as informações antes de finalizar")
@@ -79,8 +82,15 @@ router.get('/candidato/:cpf', function (req, res) {
     });
 })
 
-router.get("/", (req, res) => { 
-    res.json({ "hello": "hi"})
+router.get('/cep/:cep', function (req, res) { 
+
+    axios.get('https://viacep.com.br/ws/'+req.params.cep+'/json/')
+    .then(response => {
+        res.json(response.data)
+    })
+    .catch(error => {
+        res.status(400).send('CEP Inválido')
+    });
 })
 
 app.use('/.netlify/functions/api', router);

@@ -20,9 +20,10 @@ class App extends Component{
         cpf: "",
         estadoCivil: "",
         sexo:"",
-        endereco:"",
-        cidade:"",
-        cep:"",
+        endereco:{
+          cep:"",
+          logradouro:"",
+          cidade:""},
         telefone:"",
         celular: "",
         email:"",
@@ -75,15 +76,54 @@ class App extends Component{
       }
 
       this.changeEndereco = (event)=> {
-        this.setState({endereco: event.target.value})
+        let { endereco } = this.state
+        endereco.logradouro = event.target.value
+        this.setState({endereco: endereco})
       }
 
       this.changeCidade = (event)=> {
-        this.setState({cidade: event.target.value})
+        let { endereco } = this.state
+        endereco.cidade = event.target.value
+        this.setState({endereco: endereco})
+      }
+
+      this.changeBairro = (event)=> {
+        let { endereco } = this.state
+        endereco.bairro = event.target.value
+        this.setState({endereco: endereco})
+      }
+
+      this.changeNumero = (event)=> {
+        let { endereco } = this.state
+        endereco.numero = event.target.value
+        this.setState({endereco: endereco})
+      }
+
+      this.changeEstado = (event)=> {
+        let { endereco } = this.state
+        endereco.estado = event.target.value
+        this.setState({endereco: endereco})
       }
 
       this.changeCep = (event)=> {
-        this.setState({cep: event.target.value})
+        let { endereco } = this.state
+        endereco.cep = event.target.value
+        this.setState({endereco: endereco})
+
+        candidatoAPI.get("/cep/"+event.target.value)
+        .then(response => {
+          let { localidade, logradouro, cep, bairro, uf} = response.data
+
+          this.setState({endereco: { 
+            cidade: localidade, 
+            logradouro: logradouro, 
+            estado: uf,
+            bairro,
+            numero: endereco.numero,
+            cep}})
+        }).catch (error => { 
+          console.log(error)
+        })
       }
 
       this.changeTelefone = (event)=> {
@@ -203,18 +243,33 @@ class App extends Component{
           </div>
 
           <div className="container">
+            <label className="required">Cep</label><br/>
+            <input type="text" value= {this.state.endereco.cep} onChange={this.changeCep} />
+          </div>
+
+          <div className="container">
             <label className="required">Endereço</label><br/>
-            <input type="text" value= {this.state.endereco} onChange={this.changeEndereco} />
+            <input type="text" value= {this.state.endereco.logradouro} onChange={this.changeEndereco} />
           </div>
 
           <div className="container"> 
             <label className="required">Cidade</label><br/>
-            <input type="text" value= {this.state.cidade} onChange={this.changeCidade} />
+            <input type="text" value= {this.state.endereco.cidade} onChange={this.changeCidade} />
           </div>
 
-          <div className="container">
-            <label className="required">Cep</label><br/>
-            <input type="text" value= {this.state.cep} onChange={this.changeCep} />
+          <div className="container"> 
+            <label className="required">Bairro</label><br/>
+            <input type="text" value= {this.state.endereco.bairro} onChange={this.changeBairro} />
+          </div>
+
+          <div className="container"> 
+            <label className="required">Numero</label><br/>
+            <input type="text" value= {this.state.endereco.numero} onChange={this.changeNumero} />
+          </div>
+
+          <div className="container"> 
+            <label className="required">Estado (UF)</label><br/>
+            <input type="text" value= {this.state.endereco.estado} onChange={this.changeEstado} />
           </div>
 
           <div className="container">
